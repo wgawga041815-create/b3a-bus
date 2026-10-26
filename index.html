@@ -3,20 +3,21 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#080b10">
-<title>B3A 實時到站 · 山景邨 ↔ 深圳灣口岸</title>
-<meta name="description" content="香港城巴 B3A 實時到站看板：山景邨 ↔ 深圳灣口岸，可選擇沿線任何上車站，每 30 秒自動更新。">
+<meta name="theme-color" content="#0b0810">
+<title>B3A 實時到站 · 山景邨 ↔ 深圳灣口岸｜桜島麻衣</title>
+<meta name="description" content="香港城巴 B3A 實時到站看板：山景邨 ↔ 深圳灣口岸，桜島麻衣主題；預設富泰（近嶺南大學），每 30 秒自動更新。">
 <link rel="canonical" href="https://wgawga041815-create.github.io/b3a-bus/">
-<meta property="og:title" content="B3A 實時到站 · 山景邨 ↔ 深圳灣口岸">
-<meta property="og:description" content="城巴 B3A 實時到站看板，選好上車站，30 秒自動更新。">
+<meta property="og:title" content="B3A 實時到站 · 山景邨 ↔ 深圳灣口岸｜桜島麻衣">
+<meta property="og:description" content="城巴 B3A 實時到站看板，桜島麻衣主題；預設富泰（近嶺南大學），30 秒自動更新。">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://wgawga041815-create.github.io/b3a-bus/">
-<meta property="og:image" content="https://wgawga041815-create.github.io/b3a-bus/og.png">
+<meta property="og:image" content="https://wgawga041815-create.github.io/b3a-bus/og.jpg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="B3A 實時到站看板：山景邨 ↔ 深圳灣口岸">
+<meta property="og:image:type" content="image/jpeg">
+<meta property="og:image:alt" content="B3A 實時到站看板，桜島麻衣主題">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://wgawga041815-create.github.io/b3a-bus/og.png">
+<meta name="twitter:image" content="https://wgawga041815-create.github.io/b3a-bus/og.jpg">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <style>
   :root {
@@ -652,10 +653,240 @@
   @keyframes shimmer { 0% { background-position: 100% 0; } 100% { background-position: 0 0; } }
   @keyframes spin { to { transform: rotate(360deg); } }
 
+
+  /* ── Sakurajima Mai theme ───────────────────── */
+  :root {
+    --bg: #0b0810;
+    --panel: #17111f;
+    --panel-deep: #100b16;
+    --line: rgba(255, 255, 255, .09);
+    --line-strong: rgba(255, 255, 255, .15);
+    --text: #fbf3f6;
+    --muted: #b9a6b0;
+    --dim: #806d78;
+    --pink: #f3b8c8;
+    --pink-strong: #ff9fba;
+    --pink-deep: #b95b78;
+  }
+  body::before {
+    background:
+      radial-gradient(900px 520px at 50% -12%, rgba(243, 184, 200, .16), transparent 64%),
+      radial-gradient(760px 520px at 108% 104%, rgba(255, 210, 63, .07), transparent 62%),
+      var(--bg);
+  }
+  body::after {
+    background-image:
+      linear-gradient(rgba(243, 184, 200, .018) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(243, 184, 200, .018) 1px, transparent 1px);
+  }
+  .masthead {
+    padding-top: 23px;
+    border-color: rgba(243, 184, 200, .16);
+    background: linear-gradient(148deg, #241827 0%, #160f1d 54%, #0d0912 100%);
+  }
+  .masthead::before {
+    background: radial-gradient(circle, rgba(243, 184, 200, .23), transparent 68%);
+  }
+  .route-badge {
+    position: relative;
+    margin-top: 7px;
+    box-shadow:
+      0 12px 28px rgba(255, 184, 0, .24),
+      inset 0 1px 0 rgba(255, 255, 255, .62);
+  }
+  .route-badge::before,
+  .route-badge::after {
+    content: "";
+    position: absolute;
+    top: -11px;
+    width: 9px;
+    height: 18px;
+    background: linear-gradient(180deg, #fff 0%, #fff 52%, #f7ccd6 53%, #f7ccd6 100%);
+    border: 1px solid #e7bcc9;
+    border-radius: 60% 60% 42% 42%;
+    transform-origin: bottom center;
+    pointer-events: none;
+  }
+  .route-badge::before { left: 8px; transform: rotate(-14deg); }
+  .route-badge::after { left: 21px; transform: rotate(14deg); }
+  .head-copy h1 .arrow { color: var(--pink-strong); }
+  .head-copy p { color: #cbb4bf; }
+  .route-rail {
+    border-top-color: rgba(243, 184, 200, .1);
+    color: #8f7884;
+  }
+  .route-rail .track {
+    background-image: linear-gradient(90deg, rgba(243, 184, 200, .58) 45%, transparent 45%);
+  }
+  .route-rail .track::after { border-color: rgba(243, 184, 200, .75); }
+  .route-rail .count {
+    color: var(--pink);
+    border-color: rgba(243, 184, 200, .2);
+    background: rgba(243, 184, 200, .055);
+  }
+
+  /* ── Mai hero ───────────────────────────────── */
+  .hero {
+    position: relative;
+    margin: 13px 0 0;
+    overflow: hidden;
+    border: 1px solid rgba(243, 184, 200, .2);
+    border-radius: 20px;
+    aspect-ratio: 16 / 9.2;
+    background: #1a1020;
+    box-shadow: 0 18px 46px rgba(0, 0, 0, .38), inset 0 1px 0 rgba(255, 255, 255, .05);
+  }
+  .hero img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: 50% 38%;
+    filter: saturate(1.04) contrast(1.01);
+  }
+  .hero::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background:
+      linear-gradient(180deg, rgba(11, 8, 16, .02) 0%, rgba(11, 8, 16, .04) 42%, rgba(11, 8, 16, .78) 100%),
+      linear-gradient(90deg, rgba(11, 8, 16, .42) 0%, rgba(11, 8, 16, 0) 58%);
+  }
+  .name-tag {
+    position: absolute;
+    top: 11px;
+    right: 11px;
+    z-index: 2;
+    writing-mode: vertical-rl;
+    padding: 8px 5px;
+    border: 1px solid rgba(143, 45, 67, .28);
+    border-radius: 8px;
+    background: rgba(255, 250, 252, .93);
+    color: #8f2d43;
+    font-family: "Yu Mincho", "Hiragino Mincho ProN", "Noto Serif TC", "Songti TC", serif;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: .18em;
+    box-shadow: 0 5px 18px rgba(0, 0, 0, .22);
+  }
+  .hero-caption {
+    position: absolute;
+    left: 13px;
+    right: 13px;
+    bottom: 11px;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+  }
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 4px 8px;
+    border: 1px solid rgba(255, 255, 255, .2);
+    border-radius: 999px;
+    background: rgba(11, 8, 16, .46);
+    color: #ffe1e9;
+    font-size: 9px;
+    font-weight: 600;
+    letter-spacing: .14em;
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+  }
+  .hero-badge svg { width: 12px; height: 12px; flex: none; color: var(--pink); }
+  .quote {
+    margin: 0;
+    max-width: 88%;
+    color: #fff0f4;
+    font-family: "Yu Mincho", "Hiragino Mincho ProN", "Noto Serif TC", "Songti TC", serif;
+    font-size: 11.5px;
+    line-height: 1.65;
+    letter-spacing: .03em;
+    text-shadow: 0 1px 10px rgba(0, 0, 0, .72);
+  }
+
+  /* ── Panels in plum / sakura ────────────────── */
+  .service {
+    border-color: rgba(243, 184, 200, .13);
+    background: linear-gradient(180deg, rgba(27, 19, 34, .98), rgba(14, 9, 20, .98));
+    box-shadow: 0 18px 46px rgba(0, 0, 0, .3), inset 0 1px 0 rgba(255, 255, 255, .035);
+  }
+  .dir .arrow { color: var(--pink-strong); }
+  .dir-en { color: #8b6d7a; }
+  .stop-picker {
+    border-color: rgba(243, 184, 200, .12);
+    background: rgba(255, 255, 255, .025);
+  }
+  .stop-picker:hover,
+  .stop-picker:focus-visible {
+    border-color: rgba(243, 184, 200, .4);
+    background: rgba(243, 184, 200, .05);
+  }
+  .pin {
+    color: var(--pink);
+    background: rgba(243, 184, 200, .09);
+    border-color: rgba(243, 184, 200, .18);
+  }
+  .pick-label { color: #8b6d7a; }
+  .pick-sub { color: #b9a6b0; }
+  .chev { color: #c9a6b4; background: rgba(243, 184, 200, .07); }
+  .next-card {
+    border-color: rgba(243, 184, 200, .21);
+    background:
+      radial-gradient(130% 150% at 102% -20%, rgba(255, 159, 186, .14), transparent 55%),
+      linear-gradient(155deg, #1d1424 0%, #110b18 100%);
+  }
+  .next-card::after {
+    background: linear-gradient(180deg, var(--pink-strong), rgba(255, 159, 186, 0));
+  }
+  .next-tag { color: var(--pink); }
+  .next-card.soon .next-tag { color: var(--green); }
+  .queue-row { border-bottom-color: rgba(243, 184, 200, .08); }
+  .q-mins { color: #ffeaf0; }
+  .panel-foot { border-top-color: rgba(243, 184, 200, .07); }
+  .ghost-btn:hover,
+  .ghost-btn:focus-visible {
+    border-color: rgba(243, 184, 200, .36);
+    color: var(--pink);
+    background: rgba(243, 184, 200, .05);
+  }
+  .source { color: #705966; }
+  dialog {
+    border-color: rgba(243, 184, 200, .18);
+    background: #120c19;
+  }
+  .dialog-head {
+    border-bottom-color: rgba(243, 184, 200, .1);
+    background: linear-gradient(180deg, #1d1424, #120c19);
+  }
+  .dialog-kicker { color: #8b6d7a; }
+  .dialog-head h2 .arrow { color: var(--pink-strong); }
+  .stop-item:hover,
+  .stop-item:focus-visible { background: rgba(243, 184, 200, .05); }
+  .stop-item.active {
+    background: rgba(243, 184, 200, .08);
+    border-color: rgba(243, 184, 200, .22);
+  }
+  .stop-item.active .stop-seq { color: var(--pink); }
+  .stop-check { background: var(--pink); color: #2a0d1a; }
+  .toast {
+    border-color: rgba(243, 184, 200, .2);
+    background: #241628;
+  }
+
   @media (max-width: 380px) {
     body { padding-left: 10px; padding-right: 10px; }
-    .masthead { padding: 15px 14px 13px; border-radius: 22px; }
+    .masthead { padding: 20px 14px 13px; border-radius: 22px; }
     .route-badge { width: 54px; height: 54px; font-size: 19px; border-radius: 15px; }
+    .route-badge::before { left: 7px; }
+    .route-badge::after { left: 19px; }
+    .hero { border-radius: 17px; aspect-ratio: 16 / 9.2; }
+    .name-tag { top: 9px; right: 9px; font-size: 11px; padding: 7px 4px; }
+    .hero-caption { left: 11px; right: 11px; bottom: 9px; }
+    .quote { font-size: 10.8px; max-width: 92%; }
     .head-copy h1 { font-size: 17.5px; }
     .clockbox b { font-size: 13px; }
     .service { padding: 13px; border-radius: 19px; }
@@ -697,19 +928,31 @@
     </div>
   </header>
 
+  <figure class="hero">
+    <img src="mai-hero.jpg" alt="桜島麻衣站在水族館的水母缸前" width="1600" height="920" fetchpriority="high">
+    <span class="name-tag">桜島麻衣</span>
+    <figcaption class="hero-caption">
+      <span class="hero-badge">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8.2 9.4C6.6 7 6.1 4.2 7 3.5c.9-.6 2.2 1.4 3 3.6"/><path d="M15.8 9.4c1.6-2.4 2.1-5.2 1.2-5.9-.9-.6-2.2 1.4-3 3.6"/><path d="M12 21c-3.5 0-5.8-2.3-5.8-5.2C6.2 12.1 8.7 9 12 9s5.8 3.1 5.8 6.8C17.8 18.7 15.5 21 12 21Z"/><circle cx="9.9" cy="14.2" r=".7" fill="currentColor" stroke="none"/><circle cx="14.1" cy="14.2" r=".7" fill="currentColor" stroke="none"/></svg>
+        B3A 實時到站
+      </span>
+      <p class="quote" id="maiQuote">「車來了。走吧，別讓我等。」</p>
+    </figcaption>
+  </figure>
+
   <section class="service" data-dir="O" aria-labelledby="dirO">
     <div class="service-top">
       <div class="dir" id="dirO"><span class="to">往</span><b>深圳灣口岸</b><span class="arrow">↗</span></div>
       <div class="dir-en">SHENZHEN BAY PORT</div>
     </div>
-    <button class="stop-picker" type="button" data-dir="O" aria-label="更改往深圳灣口岸的上車站">
+    <button class="stop-picker" type="button" data-dir="O" aria-label="更改往深圳灣口岸的車站">
       <span class="pin" aria-hidden="true">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s6-5.2 6-10a6 6 0 1 0-12 0c0 4.8 6 10 6 10Z"/><circle cx="12" cy="11" r="2.2"/></svg>
       </span>
       <span class="pick-copy">
-        <span class="pick-label">上車站</span>
+        <span class="pick-label">車站</span>
         <span class="pick-name">富泰邨</span>
-        <span class="pick-sub">青山公路</span>
+        <span class="pick-sub">青山公路 · 近嶺南大學</span>
       </span>
       <span class="chev" aria-hidden="true">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m7 10 5 5 5-5"/></svg>
@@ -728,14 +971,14 @@
       <div class="dir" id="dirI"><span class="to">往</span><b>山景邨</b><span class="arrow">↗</span></div>
       <div class="dir-en">SHAN KING ESTATE</div>
     </div>
-    <button class="stop-picker" type="button" data-dir="I" aria-label="更改往山景邨的上車站">
+    <button class="stop-picker" type="button" data-dir="I" aria-label="更改往山景邨的車站">
       <span class="pin" aria-hidden="true">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s6-5.2 6-10a6 6 0 1 0-12 0c0 4.8 6 10 6 10Z"/><circle cx="12" cy="11" r="2.2"/></svg>
       </span>
       <span class="pick-copy">
-        <span class="pick-label">上車站</span>
-        <span class="pick-name">深圳灣口岸</span>
-        <span class="pick-sub">口岸總站</span>
+        <span class="pick-label">車站</span>
+        <span class="pick-name">富泰商場</span>
+        <span class="pick-sub">青山公路 · 近嶺南大學</span>
       </span>
       <span class="chev" aria-hidden="true">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m7 10 5 5 5-5"/></svg>
@@ -765,13 +1008,13 @@
       </button>
     </div>
   </footer>
-  <p class="source">資料來源：城巴開放數據（DATA.GOV.HK）· 到站時間為預計，僅供參考</p>
+  <p class="source">資料來源：城巴開放數據（DATA.GOV.HK）· 到站時間為預計<br>非官方粉絲作品 · 角色圖片版權歸原作者所有</p>
 </main>
 
 <dialog id="stopDialog" aria-labelledby="dialogTitle">
   <div class="dialog-head">
     <div>
-      <span class="dialog-kicker">選擇上車站</span>
+      <span class="dialog-kicker">選擇車站</span>
       <h2 id="dialogTitle">往深圳灣口岸</h2>
     </div>
     <button class="icon-btn" type="button" id="dialogClose" aria-label="關閉">✕</button>
@@ -809,17 +1052,17 @@
         { id: "003754", tc: "紫田村", sub: "欣寶路" },
         { id: "003207", tc: "欣田邨", sub: "青麟路" },
         { id: "003350", tc: "五柳路", sub: "藍地交匯處" },
-        { id: "003261", tc: "富泰邨", sub: "青山公路" },
+        { id: "003261", tc: "富泰邨", sub: "青山公路 · 近嶺南大學" },
         { id: "003208", tc: "深圳灣口岸", sub: "口岸總站", terminal: true }
       ]
     },
     I: {
       label: "往山景邨",
       en: "SHAN KING ESTATE",
-      defaultStop: "003208",
+      defaultStop: "003262",
       stops: [
         { id: "003208", tc: "深圳灣口岸", sub: "口岸總站" },
-        { id: "003262", tc: "富泰商場", sub: "青山公路" },
+        { id: "003262", tc: "富泰商場", sub: "青山公路 · 近嶺南大學" },
         { id: "003351", tc: "五柳路", sub: "藍地交匯處" },
         { id: "003209", tc: "欣田邨", sub: "青麟路" },
         { id: "004004", tc: "菁田邨", sub: "" },
@@ -877,7 +1120,7 @@
 
   function pickInitialStop(dir) {
     let saved = null;
-    try { saved = localStorage.getItem("b3a-stop-" + dir); } catch (e) {}
+    try { saved = localStorage.getItem("b3a-mai-stop-" + dir); } catch (e) {}
     const match = DIRS[dir].stops.find(function (s) { return s.id === saved; });
     return match && !match.terminal ? saved : DIRS[dir].defaultStop;
   }
@@ -915,7 +1158,7 @@
       return '<article class="next-card ' + left.cls + '">' +
         '<div class="next-head">' +
           '<span class="next-tag">下一班</span>' +
-          '<span class="next-clock">' + clock + ' 開出</span>' +
+          '<span class="next-clock">' + clock + ' 到站</span>' +
         '</div>' +
         '<div class="next-body">' +
           '<span class="mins' + (left.unit ? "" : " is-text") + '">' + left.text + '</span>' +
@@ -926,7 +1169,7 @@
     }
     return '<div class="queue-row">' +
       '<span class="q-tag">第 ' + (index + 1) + ' 班</span>' +
-      '<span class="q-clock">' + clock + ' 開出</span>' +
+      '<span class="q-clock">' + clock + ' 到站</span>' +
       '<span class="q-mins' + (left.unit ? "" : " is-text") + '">' +
         left.text + (left.unit ? '<small>' + left.unit + '</small>' : "") +
       '</span>' +
@@ -1059,6 +1302,39 @@
     }
   }
 
+  const QUOTES = [
+    "「車來了。走吧，別讓我等。」",
+    "「班次這種事，交給我記就好。」",
+    "「你只負責準時出門。」",
+    "「雨天的話，早五分鐘。」",
+    "「過了關，記得看回程。」",
+    "「別跑，還有兩分鐘。」",
+    "「…不是特地提醒你，順口而已。」",
+    "「手機收好，車門要關了。」",
+    "「今晚回來，也看最後一班。」",
+    "「你平安到家就好。」",
+    "「人多就站穩，別只顧看手機。」",
+    "「路線我幫你看過了，放心走。」"
+  ];
+
+  function hkDayNumber() {
+    try {
+      const parts = new Intl.DateTimeFormat("en-CA", {
+        timeZone: "Asia/Hong_Kong",
+        year: "numeric", month: "2-digit", day: "2-digit"
+      }).formatToParts(new Date());
+      const val = function (type) { return Number(parts.find(function (p) { return p.type === type; }).value); };
+      return Math.floor(Date.UTC(val("year"), val("month") - 1, val("day")) / 86400000);
+    } catch (e) {
+      return Math.floor(Date.now() / 86400000);
+    }
+  }
+
+  function renderQuote() {
+    const el = document.getElementById("maiQuote");
+    if (el) el.textContent = QUOTES[hkDayNumber() % QUOTES.length];
+  }
+
   function tickClock() {
     ui.clock.textContent = HHMMSS.format(new Date()).slice(0, 5);
   }
@@ -1098,7 +1374,7 @@
     state[dir].error = null;
     state[dir].updated = null;
     state[dir].loading = true;
-    try { localStorage.setItem("b3a-stop-" + dir, id); } catch (e) {}
+    try { localStorage.setItem("b3a-mai-stop-" + dir, id); } catch (e) {}
     if (ui.dialog.open) ui.dialog.close();
     renderService(dir);
     fetchService(dir);
@@ -1154,6 +1430,7 @@
     if (!document.hidden) refreshAll(false);
   });
 
+  renderQuote();
   tickClock();
   setInterval(tickClock, 1000);
   setInterval(function () { if (!document.hidden) refreshAll(false); }, REFRESH_MS);

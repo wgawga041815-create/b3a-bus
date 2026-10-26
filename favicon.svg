@@ -1,4 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
-  <rect width="64" height="64" rx="16" fill="#ffd23f"/>
-  <text x="32" y="40" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="21" font-weight="800" letter-spacing="0.5" fill="#171105">B3A</text>
+  <ellipse cx="24" cy="9" rx="4.6" ry="10" transform="rotate(-12 24 9)" fill="#fff" stroke="#e7bcc9" stroke-width="1.2"/>
+  <ellipse cx="40" cy="9" rx="4.6" ry="10" transform="rotate(12 40 9)" fill="#fff" stroke="#e7bcc9" stroke-width="1.2"/>
+  <rect x="8" y="13" width="48" height="43" rx="12" fill="#ffd23f"/>
+  <text x="32" y="42" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="19" font-weight="800" letter-spacing="0.4" fill="#171105">B3A</text>
 </svg>
