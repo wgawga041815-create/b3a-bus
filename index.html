@@ -1,0 +1,1164 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-HK">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#080b10">
+<title>B3A 實時到站 · 山景邨 ↔ 深圳灣口岸</title>
+<meta name="description" content="香港城巴 B3A 實時到站看板：山景邨 ↔ 深圳灣口岸，可選擇沿線任何上車站，每 30 秒自動更新。">
+<meta property="og:title" content="B3A 實時到站 · 山景邨 ↔ 深圳灣口岸">
+<meta property="og:description" content="城巴 B3A 實時到站看板，選好上車站，30 秒自動更新。">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<style>
+  :root {
+    --bg: #080b10;
+    --panel: #10161f;
+    --panel-deep: #0b1118;
+    --line: rgba(255, 255, 255, .085);
+    --line-strong: rgba(255, 255, 255, .14);
+    --text: #f3f6f9;
+    --muted: #93a1b1;
+    --dim: #647384;
+    --accent: #ffd23f;
+    --accent-deep: #ffb800;
+    --green: #5ee6a8;
+    --amber: #f0b429;
+    --red: #ff7a7a;
+    --radius: 22px;
+    --shadow: 0 28px 70px rgba(0, 0, 0, .42);
+    color-scheme: dark;
+  }
+
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0;
+    min-height: 100vh;
+    min-height: 100dvh;
+    color: var(--text);
+    background: var(--bg);
+    font-family: "SF Pro Text", "PingFang HK", "PingFang SC", "Noto Sans TC",
+                 "Microsoft JhengHei", system-ui, -apple-system, "Segoe UI", sans-serif;
+    padding: 18px 14px calc(24px + env(safe-area-inset-bottom));
+    display: flex;
+    justify-content: center;
+  }
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: -2;
+    background:
+      radial-gradient(900px 520px at 50% -12%, rgba(255, 210, 63, .11), transparent 64%),
+      radial-gradient(760px 520px at 108% 104%, rgba(45, 190, 175, .085), transparent 62%),
+      var(--bg);
+  }
+  body::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    background-image:
+      linear-gradient(rgba(255, 255, 255, .021) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 255, 255, .021) 1px, transparent 1px);
+    background-size: 46px 46px;
+    mask-image: radial-gradient(ellipse 70% 60% at 50% 0%, #000 0%, transparent 78%);
+    -webkit-mask-image: radial-gradient(ellipse 70% 60% at 50% 0%, #000 0%, transparent 78%);
+  }
+
+  .shell { width: 100%; max-width: 560px; min-width: 0; }
+
+  /* ── Header ─────────────────────────────────── */
+  .masthead {
+    position: relative;
+    overflow: hidden;
+    padding: 17px 17px 15px;
+    border: 1px solid var(--line);
+    border-radius: 26px;
+    background:
+      linear-gradient(148deg, #18202b 0%, #0f151d 54%, #0a0f15 100%);
+    box-shadow: var(--shadow), inset 0 1px 0 rgba(255, 255, 255, .055);
+  }
+  .masthead::before {
+    content: "";
+    position: absolute;
+    width: 250px;
+    height: 250px;
+    right: -95px;
+    top: -130px;
+    background: radial-gradient(circle, rgba(255, 210, 63, .19), transparent 68%);
+    pointer-events: none;
+  }
+  .brandline {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-width: 0;
+  }
+  .route-badge {
+    flex: none;
+    width: 60px;
+    height: 60px;
+    display: grid;
+    place-items: center;
+    padding-top: 2px;
+    border-radius: 17px;
+    background: linear-gradient(155deg, #ffe470 0%, #ffd23f 45%, #f5b800 100%);
+    color: #171105;
+    font-size: 21px;
+    font-weight: 900;
+    letter-spacing: .3px;
+    line-height: 1;
+    box-shadow:
+      0 10px 24px rgba(255, 184, 0, .2),
+      inset 0 1px 0 rgba(255, 255, 255, .6);
+  }
+  .head-copy { min-width: 0; flex: 1 1 auto; }
+  .head-copy h1 {
+    margin: 0;
+    font-size: 19px;
+    line-height: 1.32;
+    font-weight: 700;
+    letter-spacing: .2px;
+  }
+  .head-copy h1 .arrow { color: var(--accent); padding: 0 2px; }
+  .head-copy p {
+    margin: 4px 0 0;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 4px 6px;
+    font-size: 11px;
+    line-height: 1.5;
+    color: var(--muted);
+    letter-spacing: .15px;
+  }
+  .live-dot {
+    width: 6px;
+    height: 6px;
+    flex: none;
+    border-radius: 50%;
+    background: var(--green);
+    box-shadow: 0 0 0 3px rgba(94, 230, 168, .12);
+    animation: breathe 2.6s ease-in-out infinite;
+  }
+  .live-dot.err { background: var(--red); box-shadow: 0 0 0 3px rgba(255, 122, 122, .12); animation: none; }
+  .clockbox { flex: none; text-align: right; align-self: flex-start; padding-top: 3px; }
+  .clockbox b {
+    display: block;
+    font-family: "SF Mono", "Menlo", "Consolas", monospace;
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: -.4px;
+    font-variant-numeric: tabular-nums;
+  }
+  .clockbox small {
+    display: block;
+    margin-top: 3px;
+    font-size: 8px;
+    letter-spacing: .2em;
+    color: var(--dim);
+  }
+
+  .route-rail {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    margin-top: 15px;
+    padding-top: 12px;
+    border-top: 1px solid rgba(255, 255, 255, .055);
+    font-size: 10px;
+    color: var(--dim);
+    letter-spacing: .2px;
+  }
+  .route-rail .end { white-space: nowrap; }
+  .route-rail .track {
+    position: relative;
+    flex: 1 1 auto;
+    height: 1px;
+    background-image: linear-gradient(90deg, rgba(255, 210, 63, .55) 45%, transparent 45%);
+    background-size: 7px 1px;
+    background-repeat: repeat-x;
+    opacity: .7;
+  }
+  .route-rail .track::after {
+    content: "";
+    position: absolute;
+    right: -1px;
+    top: -3px;
+    width: 6px;
+    height: 6px;
+    border-top: 1px solid rgba(255, 210, 63, .7);
+    border-right: 1px solid rgba(255, 210, 63, .7);
+    transform: rotate(45deg);
+  }
+  .route-rail .count {
+    color: var(--muted);
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    padding: 2px 7px;
+    line-height: 1.4;
+    white-space: nowrap;
+  }
+
+  /* ── Service panels ─────────────────────────── */
+  .service {
+    position: relative;
+    margin-top: 13px;
+    padding: 15px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    background: linear-gradient(180deg, rgba(17, 23, 32, .97), rgba(10, 15, 21, .97));
+    box-shadow: 0 18px 46px rgba(0, 0, 0, .28), inset 0 1px 0 rgba(255, 255, 255, .035);
+  }
+  .service-top {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    min-width: 0;
+  }
+  .dir {
+    display: flex;
+    align-items: baseline;
+    gap: 6px;
+    min-width: 0;
+    font-size: 15px;
+    font-weight: 650;
+    letter-spacing: .1px;
+  }
+  .dir .to { color: var(--dim); font-size: 10.5px; font-weight: 500; letter-spacing: .18em; }
+  .dir .arrow { color: var(--accent); font-size: 13px; }
+  .dir b { font-weight: 700; }
+  .dir-en {
+    margin-left: auto;
+    font-size: 8.5px;
+    line-height: 1.3;
+    letter-spacing: .16em;
+    color: var(--dim);
+    text-align: right;
+    white-space: nowrap;
+  }
+
+  .stop-picker {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 11px;
+    padding: 9px 10px;
+    border: 1px solid rgba(255, 255, 255, .075);
+    border-radius: 13px;
+    background: rgba(255, 255, 255, .027);
+    color: var(--text);
+    font: inherit;
+    text-align: left;
+    cursor: pointer;
+    transition: border-color .16s ease, background .16s ease;
+  }
+  .stop-picker:hover,
+  .stop-picker:focus-visible { border-color: rgba(255, 210, 63, .38); background: rgba(255, 210, 63, .045); outline: none; }
+  .pin {
+    flex: none;
+    width: 30px;
+    height: 30px;
+    display: grid;
+    place-items: center;
+    border-radius: 9px;
+    color: var(--accent);
+    background: rgba(255, 210, 63, .09);
+    border: 1px solid rgba(255, 210, 63, .14);
+  }
+  .pin svg { width: 14px; height: 14px; }
+  .pick-copy { display: flex; flex-direction: column; min-width: 0; gap: 1px; }
+  .pick-label { font-size: 8.5px; letter-spacing: .17em; color: var(--dim); line-height: 1.3; }
+  .pick-name {
+    font-size: 13.5px;
+    font-weight: 650;
+    line-height: 1.35;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .pick-sub {
+    font-size: 10px;
+    color: var(--muted);
+    line-height: 1.35;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .chev {
+    flex: none;
+    margin-left: auto;
+    width: 26px;
+    height: 26px;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    color: var(--muted);
+    background: rgba(255, 255, 255, .035);
+  }
+  .chev svg { width: 12px; height: 12px; }
+
+  .board { margin-top: 11px; }
+
+  /* ── Next bus ───────────────────────────────── */
+  .next-card {
+    position: relative;
+    overflow: hidden;
+    padding: 13px 15px 14px;
+    border: 1px solid rgba(255, 210, 63, .17);
+    border-radius: 16px;
+    background:
+      radial-gradient(130% 150% at 102% -20%, rgba(255, 210, 63, .15), transparent 55%),
+      linear-gradient(155deg, #161e28 0%, #0e141b 100%);
+  }
+  .next-card::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 14px;
+    bottom: 14px;
+    width: 2px;
+    border-radius: 2px;
+    background: linear-gradient(180deg, var(--accent), rgba(255, 210, 63, 0));
+    opacity: .75;
+  }
+  .next-card.soon { border-color: rgba(94, 230, 168, .3); }
+  .next-card.soon::after { background: linear-gradient(180deg, var(--green), rgba(94, 230, 168, 0)); }
+  .next-card.expired { opacity: .65; }
+  .next-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+  }
+  .next-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 9px;
+    font-weight: 650;
+    letter-spacing: .18em;
+    color: var(--accent);
+  }
+  .next-card.soon .next-tag { color: var(--green); }
+  .next-clock {
+    font-family: "SF Mono", "Menlo", "Consolas", monospace;
+    font-size: 11px;
+    color: var(--muted);
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -.2px;
+  }
+  .next-body {
+    display: flex;
+    align-items: baseline;
+    gap: 7px;
+    margin-top: 1px;
+  }
+  .mins {
+    font-family: "SF Pro Display", "PingFang HK", system-ui, sans-serif;
+    font-size: clamp(50px, 14.5vw, 66px);
+    font-weight: 800;
+    line-height: 1.02;
+    letter-spacing: -2.5px;
+    color: var(--accent);
+    font-variant-numeric: tabular-nums;
+    text-shadow: 0 0 34px rgba(255, 210, 63, .13);
+  }
+  .next-card.soon .mins { color: var(--green); text-shadow: 0 0 34px rgba(94, 230, 168, .13); }
+  .next-card.expired .mins { color: var(--muted); text-shadow: none; }
+  .mins.is-text { font-size: clamp(24px, 7.2vw, 30px); letter-spacing: -.4px; line-height: 1.45; }
+  .unit { font-size: 12px; font-weight: 550; color: var(--muted); letter-spacing: .5px; }
+  .remark {
+    margin-top: 7px;
+    font-size: 10.5px;
+    line-height: 1.5;
+    color: var(--amber);
+  }
+
+  /* ── Queue ──────────────────────────────────── */
+  .queue { margin-top: 3px; }
+  .queue-row {
+    display: grid;
+    grid-template-columns: 52px minmax(0, 1fr) auto;
+    align-items: baseline;
+    gap: 9px;
+    padding: 10px 4px;
+    border-bottom: 1px dashed rgba(255, 255, 255, .065);
+  }
+  .queue-row:last-child { border-bottom: 0; padding-bottom: 3px; }
+  .q-tag { font-size: 9.5px; color: var(--dim); letter-spacing: .08em; white-space: nowrap; }
+  .q-clock {
+    font-family: "SF Mono", "Menlo", "Consolas", monospace;
+    font-size: 11.5px;
+    color: var(--muted);
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -.15px;
+  }
+  .q-mins {
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--text);
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+  }
+  .q-mins small { margin-left: 2px; font-size: 9.5px; font-weight: 500; color: var(--dim); }
+  .q-mins.is-text { font-size: 12.5px; color: var(--muted); }
+  .q-remark {
+    grid-column: 2 / -1;
+    margin-top: -5px;
+    font-size: 10px;
+    line-height: 1.45;
+    color: var(--amber);
+  }
+
+  .panel-foot {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    margin-top: 8px;
+    padding-top: 8px;
+    border-top: 1px solid rgba(255, 255, 255, .045);
+    font-size: 9.5px;
+    color: var(--dim);
+    letter-spacing: .1px;
+  }
+  .panel-foot .pdot { width: 4px; height: 4px; border-radius: 50%; background: var(--green); flex: none; }
+  .panel-foot.warn { color: var(--amber); }
+  .panel-foot.warn .pdot { background: var(--amber); }
+  .panel-foot.err { color: var(--red); }
+  .panel-foot.err .pdot { background: var(--red); }
+
+  /* ── Loading / empty ────────────────────────── */
+  .skeleton {
+    border-radius: 16px;
+    background: linear-gradient(90deg, #111821 25%, #1a2431 37%, #111821 63%);
+    background-size: 400% 100%;
+    animation: shimmer 1.5s ease infinite;
+  }
+  .skeleton.tall { height: 116px; }
+  .skeleton.short { height: 42px; margin-top: 7px; }
+  .empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    padding: 26px 14px;
+    border: 1px dashed rgba(255, 255, 255, .1);
+    border-radius: 15px;
+    text-align: center;
+    color: var(--muted);
+  }
+  .empty svg { width: 20px; height: 20px; margin-bottom: 3px; opacity: .65; }
+  .empty b { font-size: 13px; font-weight: 650; color: var(--text); }
+  .empty span { font-size: 10.5px; line-height: 1.6; color: var(--dim); max-width: 260px; }
+  .empty.error b { color: var(--red); }
+
+  /* ── Footer ─────────────────────────────────── */
+  .page-foot {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 9px 12px;
+    margin-top: 14px;
+    padding: 0 3px;
+  }
+  .status { display: flex; align-items: center; gap: 6px; flex: 1 1 auto; min-width: 0; }
+  .status .sdot { width: 6px; height: 6px; border-radius: 50%; background: var(--green); flex: none; box-shadow: 0 0 0 3px rgba(94, 230, 168, .09); }
+  .status .sdot.load { background: var(--accent); box-shadow: 0 0 0 3px rgba(255, 210, 63, .09); animation: breathe 1.4s ease-in-out infinite; }
+  .status .sdot.err { background: var(--red); box-shadow: 0 0 0 3px rgba(255, 122, 122, .09); animation: none; }
+  .status span:last-child {
+    font-size: 10px;
+    color: var(--dim);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .foot-actions { display: flex; gap: 7px; flex: none; }
+  .ghost-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    min-height: 34px;
+    padding: 6px 11px;
+    border: 1px solid var(--line);
+    border-radius: 9px;
+    background: rgba(255, 255, 255, .025);
+    color: var(--muted);
+    font: inherit;
+    font-size: 10.5px;
+    cursor: pointer;
+    transition: border-color .16s ease, color .16s ease, background .16s ease;
+  }
+  .ghost-btn:hover,
+  .ghost-btn:focus-visible { border-color: rgba(255, 210, 63, .32); color: var(--accent); background: rgba(255, 210, 63, .045); outline: none; }
+  .ghost-btn:disabled { opacity: .55; cursor: default; }
+  .ghost-btn svg { width: 12px; height: 12px; }
+  .ghost-btn.spinning svg { animation: spin .9s linear infinite; }
+
+  .source {
+    margin: 9px 0 0;
+    text-align: center;
+    font-size: 9px;
+    line-height: 1.6;
+    letter-spacing: .12px;
+    color: #536272;
+  }
+
+  /* ── Dialog ─────────────────────────────────── */
+  dialog {
+    width: min(430px, calc(100vw - 24px));
+    max-height: min(76dvh, 620px);
+    margin: auto;
+    padding: 0;
+    border: 1px solid var(--line-strong);
+    border-radius: 20px;
+    background: #0d131b;
+    color: var(--text);
+    box-shadow: 0 30px 90px rgba(0, 0, 0, .6);
+    overflow: hidden;
+  }
+  dialog::backdrop {
+    background: rgba(3, 6, 10, .72);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+  }
+  .dialog-head {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 16px 16px 12px;
+    border-bottom: 1px solid var(--line);
+    background: linear-gradient(180deg, #131b25, #0d131b);
+  }
+  .dialog-kicker { display: block; font-size: 8.5px; letter-spacing: .2em; color: var(--dim); }
+  .dialog-head h2 { margin: 3px 0 0; font-size: 17px; font-weight: 700; letter-spacing: .1px; }
+  .dialog-head h2 .arrow { color: var(--accent); }
+  .icon-btn {
+    flex: none;
+    margin-left: auto;
+    width: 30px;
+    height: 30px;
+    display: grid;
+    place-items: center;
+    border: 1px solid var(--line);
+    border-radius: 50%;
+    background: transparent;
+    color: var(--muted);
+    font: inherit;
+    font-size: 15px;
+    cursor: pointer;
+  }
+  .icon-btn:hover { color: var(--text); border-color: var(--line-strong); }
+  .stop-list {
+    max-height: min(60dvh, 500px);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    padding: 7px;
+    -webkit-overflow-scrolling: touch;
+  }
+  .stop-item {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 9px 9px;
+    border: 1px solid transparent;
+    border-radius: 11px;
+    background: transparent;
+    color: var(--text);
+    font: inherit;
+    text-align: left;
+    cursor: pointer;
+  }
+  .stop-item:hover,
+  .stop-item:focus-visible { background: rgba(255, 255, 255, .04); outline: none; }
+  .stop-item.active { background: rgba(255, 210, 63, .075); border-color: rgba(255, 210, 63, .18); }
+  .stop-seq {
+    flex: none;
+    width: 23px;
+    font-family: "SF Mono", "Menlo", monospace;
+    font-size: 9px;
+    color: var(--dim);
+    font-variant-numeric: tabular-nums;
+  }
+  .stop-item.active .stop-seq { color: var(--accent); }
+  .stop-copy { display: flex; flex-direction: column; min-width: 0; gap: 1px; }
+  .stop-copy b { font-size: 12.5px; font-weight: 600; line-height: 1.4; }
+  .stop-copy small { font-size: 9.5px; color: var(--dim); }
+  .stop-check {
+    margin-left: auto;
+    flex: none;
+    width: 18px;
+    height: 18px;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    background: var(--accent);
+    color: #171105;
+    font-size: 10px;
+    font-weight: 900;
+    opacity: 0;
+    transform: scale(.7);
+    transition: opacity .14s ease, transform .14s ease;
+  }
+  .stop-item.active .stop-check { opacity: 1; transform: scale(1); }
+  .stop-item.terminal { opacity: .42; cursor: default; }
+  .stop-item.terminal:hover { background: transparent; }
+  .stop-note {
+    margin-left: auto;
+    flex: none;
+    padding: 2px 6px;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    font-size: 8px;
+    letter-spacing: .1em;
+    color: var(--dim);
+  }
+
+  .toast {
+    position: fixed;
+    left: 50%;
+    bottom: calc(22px + env(safe-area-inset-bottom));
+    z-index: 20;
+    transform: translate(-50%, 12px);
+    padding: 9px 14px;
+    border: 1px solid var(--line-strong);
+    border-radius: 999px;
+    background: #1a2330;
+    color: var(--text);
+    font-size: 11px;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, .45);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity .2s ease, transform .2s ease;
+  }
+  .toast.show { opacity: 1; transform: translate(-50%, 0); }
+
+  @keyframes breathe { 50% { opacity: .35; } }
+  @keyframes shimmer { 0% { background-position: 100% 0; } 100% { background-position: 0 0; } }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  @media (max-width: 380px) {
+    body { padding-left: 10px; padding-right: 10px; }
+    .masthead { padding: 15px 14px 13px; border-radius: 22px; }
+    .route-badge { width: 54px; height: 54px; font-size: 19px; border-radius: 15px; }
+    .head-copy h1 { font-size: 17.5px; }
+    .clockbox b { font-size: 13px; }
+    .service { padding: 13px; border-radius: 19px; }
+    .dir { font-size: 14px; }
+    .dir-en { display: none; }
+    .next-card { padding: 12px 13px 13px; }
+    .mins { font-size: 50px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation: none !important; transition: none !important; }
+  }
+</style>
+</head>
+<body>
+<noscript><p style="max-width:560px;margin:0 auto;padding:12px 16px;border:1px solid rgba(255,255,255,.12);border-radius:12px;color:#93a1b1;font-size:12px;line-height:1.6">這個看板需要 JavaScript 才能取得城巴實時班次，請開啟 JavaScript 後重新載入。</p></noscript>
+<main class="shell">
+  <header class="masthead">
+    <div class="brandline">
+      <span class="route-badge" aria-hidden="true">B3A</span>
+      <div class="head-copy">
+        <h1>山景邨 <span class="arrow">↔</span> 深圳灣口岸</h1>
+        <p>
+          <span class="live-dot" id="liveDot"></span>
+          <span>城巴 · 實時到站</span>
+          <span aria-hidden="true">·</span>
+          <span>每 30 秒更新</span>
+        </p>
+      </div>
+      <div class="clockbox" aria-label="香港時間">
+        <b id="hkClock">--:--</b>
+        <small>HKT</small>
+      </div>
+    </div>
+    <div class="route-rail" aria-hidden="true">
+      <span class="end">山景邨</span>
+      <span class="track"></span>
+      <span class="end">深圳灣口岸</span>
+      <span class="count">15 站</span>
+    </div>
+  </header>
+
+  <section class="service" data-dir="O" aria-labelledby="dirO">
+    <div class="service-top">
+      <div class="dir" id="dirO"><span class="to">往</span><b>深圳灣口岸</b><span class="arrow">↗</span></div>
+      <div class="dir-en">SHENZHEN BAY PORT</div>
+    </div>
+    <button class="stop-picker" type="button" data-dir="O" aria-label="更改往深圳灣口岸的上車站">
+      <span class="pin" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s6-5.2 6-10a6 6 0 1 0-12 0c0 4.8 6 10 6 10Z"/><circle cx="12" cy="11" r="2.2"/></svg>
+      </span>
+      <span class="pick-copy">
+        <span class="pick-label">上車站</span>
+        <span class="pick-name">富泰邨</span>
+        <span class="pick-sub">青山公路</span>
+      </span>
+      <span class="chev" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m7 10 5 5 5-5"/></svg>
+      </span>
+    </button>
+    <div class="board" aria-live="polite">
+      <div class="skeleton tall"></div>
+      <div class="skeleton short"></div>
+      <div class="skeleton short"></div>
+    </div>
+    <div class="panel-foot"><span class="pdot"></span><span>正在取得班次…</span></div>
+  </section>
+
+  <section class="service" data-dir="I" aria-labelledby="dirI">
+    <div class="service-top">
+      <div class="dir" id="dirI"><span class="to">往</span><b>山景邨</b><span class="arrow">↗</span></div>
+      <div class="dir-en">SHAN KING ESTATE</div>
+    </div>
+    <button class="stop-picker" type="button" data-dir="I" aria-label="更改往山景邨的上車站">
+      <span class="pin" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s6-5.2 6-10a6 6 0 1 0-12 0c0 4.8 6 10 6 10Z"/><circle cx="12" cy="11" r="2.2"/></svg>
+      </span>
+      <span class="pick-copy">
+        <span class="pick-label">上車站</span>
+        <span class="pick-name">深圳灣口岸</span>
+        <span class="pick-sub">口岸總站</span>
+      </span>
+      <span class="chev" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m7 10 5 5 5-5"/></svg>
+      </span>
+    </button>
+    <div class="board" aria-live="polite">
+      <div class="skeleton tall"></div>
+      <div class="skeleton short"></div>
+      <div class="skeleton short"></div>
+    </div>
+    <div class="panel-foot"><span class="pdot"></span><span>正在取得班次…</span></div>
+  </section>
+
+  <footer class="page-foot">
+    <div class="status">
+      <span class="sdot load" id="statusDot"></span>
+      <span id="statusText">正在連接城巴數據…</span>
+    </div>
+    <div class="foot-actions">
+      <button class="ghost-btn" type="button" id="shareBtn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="18" cy="5" r="2.6"/><circle cx="6" cy="12" r="2.6"/><circle cx="18" cy="19" r="2.6"/><path d="m8.4 10.7 7.2-4.3M8.4 13.3l7.2 4.3"/></svg>
+        分享
+      </button>
+      <button class="ghost-btn" type="button" id="refreshBtn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 11a8 8 0 1 0-.7 4.6"/><path d="M20 4v7h-7"/></svg>
+        更新
+      </button>
+    </div>
+  </footer>
+  <p class="source">資料來源：城巴開放數據（DATA.GOV.HK）· 到站時間為預計，僅供參考</p>
+</main>
+
+<dialog id="stopDialog" aria-labelledby="dialogTitle">
+  <div class="dialog-head">
+    <div>
+      <span class="dialog-kicker">選擇上車站</span>
+      <h2 id="dialogTitle">往深圳灣口岸</h2>
+    </div>
+    <button class="icon-btn" type="button" id="dialogClose" aria-label="關閉">✕</button>
+  </div>
+  <div class="stop-list" id="stopList"></div>
+</dialog>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+(function () {
+  "use strict";
+
+  const API = "https://rt.data.gov.hk/v2/transport/citybus";
+  const CO = "CTB";
+  const ROUTE = "B3A";
+  const REFRESH_MS = 30000;
+
+  const DIRS = {
+    O: {
+      label: "往深圳灣口岸",
+      en: "SHENZHEN BAY PORT",
+      defaultStop: "003261",
+      stops: [
+        { id: "003201", tc: "山景邨景麗樓", sub: "石排頭路" },
+        { id: "003202", tc: "大興變電站", sub: "石排頭路" },
+        { id: "003203", tc: "台山商會小學", sub: "石排頭路" },
+        { id: "003204", tc: "大興體育館", sub: "震寰路" },
+        { id: "003256", tc: "大興北休憩處", sub: "青田路" },
+        { id: "003257", tc: "新圍苑", sub: "田景路" },
+        { id: "003258", tc: "兆邦苑", sub: "田景路" },
+        { id: "003259", tc: "寶田邨", sub: "鳴琴路" },
+        { id: "003752", tc: "和田邨", sub: "欣寶路" },
+        { id: "003753", tc: "NOVO LAND", sub: "欣寶路" },
+        { id: "003754", tc: "紫田村", sub: "欣寶路" },
+        { id: "003207", tc: "欣田邨", sub: "青麟路" },
+        { id: "003350", tc: "五柳路", sub: "藍地交匯處" },
+        { id: "003261", tc: "富泰邨", sub: "青山公路" },
+        { id: "003208", tc: "深圳灣口岸", sub: "口岸總站", terminal: true }
+      ]
+    },
+    I: {
+      label: "往山景邨",
+      en: "SHAN KING ESTATE",
+      defaultStop: "003208",
+      stops: [
+        { id: "003208", tc: "深圳灣口岸", sub: "口岸總站" },
+        { id: "003262", tc: "富泰商場", sub: "青山公路" },
+        { id: "003351", tc: "五柳路", sub: "藍地交匯處" },
+        { id: "003209", tc: "欣田邨", sub: "青麟路" },
+        { id: "004004", tc: "菁田邨", sub: "欣寶路" },
+        { id: "003767", tc: "NOVO LAND", sub: "欣寶路" },
+        { id: "003752", tc: "和田邨", sub: "欣寶路" },
+        { id: "003264", tc: "盈豐園", sub: "鳴琴路" },
+        { id: "003265", tc: "良景邨", sub: "田景路" },
+        { id: "003266", tc: "田景邨田裕樓", sub: "田景路" },
+        { id: "003267", tc: "建生邨樂生樓", sub: "青田路" },
+        { id: "003213", tc: "大興體育館", sub: "震寰路" },
+        { id: "003214", tc: "翠林花園", sub: "石排頭路" },
+        { id: "003201", tc: "山景邨景麗樓", sub: "石排頭路", terminal: true }
+      ]
+    }
+  };
+
+  const HHMM = new Intl.DateTimeFormat("en-GB", {
+    hour: "2-digit", minute: "2-digit", hour12: false, hourCycle: "h23",
+    timeZone: "Asia/Hong_Kong"
+  });
+  const HHMMSS = new Intl.DateTimeFormat("en-GB", {
+    hour: "2-digit", minute: "2-digit", second: "2-digit", hour12: false,
+    hourCycle: "h23", timeZone: "Asia/Hong_Kong"
+  });
+
+  const panels = {
+    O: document.querySelector('.service[data-dir="O"]'),
+    I: document.querySelector('.service[data-dir="I"]')
+  };
+
+  const state = {
+    O: { stop: pickInitialStop("O"), rows: [], loading: true, inFlight: false,
+         error: null, updated: null, lastGood: null },
+    I: { stop: pickInitialStop("I"), rows: [], loading: true, inFlight: false,
+         error: null, updated: null, lastGood: null }
+  };
+
+  const ui = {
+    clock: document.getElementById("hkClock"),
+    liveDot: document.getElementById("liveDot"),
+    statusDot: document.getElementById("statusDot"),
+    statusText: document.getElementById("statusText"),
+    refreshBtn: document.getElementById("refreshBtn"),
+    shareBtn: document.getElementById("shareBtn"),
+    dialog: document.getElementById("stopDialog"),
+    dialogTitle: document.getElementById("dialogTitle"),
+    stopList: document.getElementById("stopList"),
+    dialogClose: document.getElementById("dialogClose"),
+    toast: document.getElementById("toast")
+  };
+
+  let dialogDir = "O";
+  let refreshing = false;
+  let toastTimer = null;
+
+  function pickInitialStop(dir) {
+    let saved = null;
+    try { saved = localStorage.getItem("b3a-stop-" + dir); } catch (e) {}
+    const match = DIRS[dir].stops.find(function (s) { return s.id === saved; });
+    return match && !match.terminal ? saved : DIRS[dir].defaultStop;
+  }
+
+  function getStop(dir) {
+    const s = state[dir];
+    return DIRS[dir].stops.find(function (x) { return x.id === s.stop; }) || DIRS[dir].stops[0];
+  }
+
+  function esc(str) {
+    return String(str == null ? "" : str)
+      .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;").replace(/'/g, "&#39;");
+  }
+
+  function timeOf(date) {
+    return date ? HHMMSS.format(date) : "--:--:--";
+  }
+
+  function fmtLeft(etaIso) {
+    const diff = new Date(etaIso).getTime() - Date.now();
+    if (diff <= 60000) {
+      if (diff < -60000) return { text: "已開出", unit: "", cls: "expired" };
+      return { text: "即將到站", unit: "", cls: "soon" };
+    }
+    const mins = Math.floor(diff / 60000);
+    return { text: String(mins), unit: "分鐘", cls: mins <= 2 ? "soon" : "" };
+  }
+
+  function arrivalHtml(row, index) {
+    const left = fmtLeft(row.eta);
+    const clock = HHMM.format(new Date(row.eta));
+    const remark = esc(row.rmk_tc || row.rmk_en || "");
+    if (index === 0) {
+      return '<article class="next-card ' + left.cls + '">' +
+        '<div class="next-head">' +
+          '<span class="next-tag">下一班</span>' +
+          '<span class="next-clock">' + clock + ' 開出</span>' +
+        '</div>' +
+        '<div class="next-body">' +
+          '<span class="mins' + (left.unit ? "" : " is-text") + '">' + left.text + '</span>' +
+          (left.unit ? '<span class="unit">' + left.unit + '</span>' : "") +
+        '</div>' +
+        (remark ? '<div class="remark">' + remark + '</div>' : "") +
+      '</article>';
+    }
+    return '<div class="queue-row">' +
+      '<span class="q-tag">第 ' + (index + 1) + ' 班</span>' +
+      '<span class="q-clock">' + clock + ' 開出</span>' +
+      '<span class="q-mins' + (left.unit ? "" : " is-text") + '">' +
+        left.text + (left.unit ? '<small>' + left.unit + '</small>' : "") +
+      '</span>' +
+      (remark ? '<div class="q-remark">' + remark + '</div>' : "") +
+    '</div>';
+  }
+
+  function skeletonHtml() {
+    return '<div class="skeleton tall"></div><div class="skeleton short"></div><div class="skeleton short"></div>';
+  }
+
+  function emptyHtml(isError) {
+    return '<div class="empty' + (isError ? " error" : "") + '">' +
+      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
+        '<path d="M4 17V7.5A2.5 2.5 0 0 1 6.5 5h11A2.5 2.5 0 0 1 20 7.5V17"/>' +
+        '<path d="M4 13h16M7 17v2M17 17v2"/><circle cx="7.5" cy="9.5" r=".8"/><circle cx="16.5" cy="9.5" r=".8"/>' +
+      '</svg>' +
+      '<b>' + (isError ? "未能連接城巴數據" : "暫時沒有班次") + '</b>' +
+      '<span>' + (isError
+        ? "請檢查網絡；系統會每 30 秒自動重試。"
+        : "可能已過服務時間，或資料尚未更新。") + '</span>' +
+    '</div>';
+  }
+
+  function renderService(dir) {
+    const s = state[dir];
+    const panel = panels[dir];
+    const board = panel.querySelector(".board");
+    const foot = panel.querySelector(".panel-foot");
+
+    const stop = getStop(dir);
+    panel.querySelector(".pick-name").textContent = stop.tc;
+    panel.querySelector(".pick-sub").textContent = stop.sub || "B3A 沿線";
+
+    if (s.loading && !s.rows.length) {
+      board.innerHTML = skeletonHtml();
+    } else if (s.rows.length) {
+      board.innerHTML = s.rows.map(arrivalHtml).join("");
+    } else if (s.error) {
+      board.innerHTML = emptyHtml(true);
+    } else if (!s.loading) {
+      board.innerHTML = emptyHtml(false);
+    }
+
+    let text = "正在取得班次…";
+    let cls = "";
+    if (s.error && s.rows.length) {
+      text = "連線不穩 · 顯示 " + timeOf(s.lastGood) + " 的資料";
+      cls = "warn";
+    } else if (s.error) {
+      text = "未能連接 · 30 秒後重試";
+      cls = "err";
+    } else if (s.updated) {
+      text = "更新於 " + timeOf(s.updated) + " · 每 30 秒";
+    }
+    foot.className = "panel-foot" + (cls ? " " + cls : "");
+    foot.innerHTML = '<span class="pdot"></span><span>' + text + '</span>';
+  }
+
+  function updateGlobalStatus() {
+    const bothOk = !state.O.error && !state.I.error;
+    const anyOk = !state.O.error || !state.I.error;
+    if (bothOk) {
+      ui.statusDot.className = "sdot";
+      ui.statusText.textContent = "已連線城巴 · 每 30 秒自動更新";
+      ui.liveDot.className = "live-dot";
+    } else if (anyOk) {
+      ui.statusDot.className = "sdot err";
+      ui.statusText.textContent = "部分路線未能更新 · 稍後自動重試";
+      ui.liveDot.className = "live-dot err";
+    } else {
+      ui.statusDot.className = "sdot err";
+      ui.statusText.textContent = "未能連接城巴數據 · 顯示上次資料";
+      ui.liveDot.className = "live-dot err";
+    }
+  }
+
+  async function fetchService(dir) {
+    const s = state[dir];
+    const reqId = (s.reqId || 0) + 1;
+    s.reqId = reqId;
+    s.inFlight = true;
+    s.loading = true;
+    renderService(dir);
+
+    try {
+      const res = await fetch(API + "/eta/" + CO + "/" + s.stop + "/" + ROUTE, { cache: "no-store" });
+      if (!res.ok) throw new Error("HTTP " + res.status);
+      const payload = await res.json();
+      if (reqId !== s.reqId) return;
+      const now = Date.now();
+      const rows = (Array.isArray(payload.data) ? payload.data : [])
+        .filter(function (d) { return d && d.dir === dir && d.eta; })
+        .filter(function (d) { return new Date(d.eta).getTime() > now - 60000; })
+        .sort(function (a, b) { return new Date(a.eta) - new Date(b.eta); })
+        .slice(0, 3);
+
+      s.rows = rows;
+      s.error = null;
+      s.updated = new Date();
+      s.lastGood = s.updated;
+    } catch (err) {
+      if (reqId !== s.reqId) return;
+      s.error = err && err.message ? err.message : "網絡錯誤";
+    } finally {
+      if (reqId === s.reqId) {
+        s.loading = false;
+        s.inFlight = false;
+        renderService(dir);
+        updateGlobalStatus();
+      }
+    }
+  }
+
+  async function refreshAll(manual) {
+    if (refreshing) return;
+    refreshing = true;
+    if (manual) {
+      ui.refreshBtn.disabled = true;
+      ui.refreshBtn.classList.add("spinning");
+      ui.statusDot.className = "sdot load";
+      ui.statusText.textContent = "正在更新…";
+    }
+    await Promise.all([fetchService("O"), fetchService("I")]);
+    refreshing = false;
+    if (manual) {
+      ui.refreshBtn.disabled = false;
+      ui.refreshBtn.classList.remove("spinning");
+      toast("已更新至 " + timeOf(new Date()));
+    }
+  }
+
+  function tickClock() {
+    ui.clock.textContent = HHMMSS.format(new Date()).slice(0, 5);
+  }
+
+  function openDialog(dir) {
+    dialogDir = dir;
+    ui.dialogTitle.innerHTML = '往 <span class="arrow">' + (dir === "O" ? "深圳灣口岸" : "山景邨") + '</span>';
+    const current = state[dir].stop;
+    ui.stopList.innerHTML = DIRS[dir].stops.map(function (s, i) {
+      const disabled = s.terminal ? ' disabled aria-disabled="true"' : "";
+      return '<button class="stop-item' + (s.id === current ? " active" : "") + (s.terminal ? " terminal" : "") +
+        '" type="button" data-stop="' + s.id + '"' + disabled + '>' +
+        '<span class="stop-seq">' + String(i + 1).padStart(2, "0") + '</span>' +
+        '<span class="stop-copy"><b>' + esc(s.tc) + '</b>' + (s.sub ? '<small>' + esc(s.sub) + '</small>' : "") + '</span>' +
+        (s.terminal
+          ? '<span class="stop-note">終點站</span>'
+          : '<span class="stop-check" aria-hidden="true">✓</span>') +
+      '</button>';
+    }).join("");
+
+    if (typeof ui.dialog.showModal === "function") {
+      ui.dialog.showModal();
+    } else {
+      ui.dialog.setAttribute("open", "");
+    }
+    const active = ui.stopList.querySelector(".stop-item.active");
+    if (active) {
+      requestAnimationFrame(function () { active.scrollIntoView({ block: "center" }); });
+    }
+  }
+
+  function selectStop(dir, id) {
+    const target = DIRS[dir].stops.find(function (s) { return s.id === id; });
+    if (!target || target.terminal) return;
+    state[dir].stop = id;
+    state[dir].rows = [];
+    state[dir].error = null;
+    state[dir].updated = null;
+    state[dir].loading = true;
+    try { localStorage.setItem("b3a-stop-" + dir, id); } catch (e) {}
+    if (ui.dialog.open) ui.dialog.close();
+    renderService(dir);
+    fetchService(dir);
+  }
+
+  function toast(msg) {
+    ui.toast.textContent = msg;
+    ui.toast.classList.add("show");
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(function () { ui.toast.classList.remove("show"); }, 2400);
+  }
+
+  async function sharePage() {
+    if (location.protocol === "file:") {
+      toast("部署上線後即可分享");
+      return;
+    }
+    const data = {
+      title: "B3A 實時到站 · 山景邨 ↔ 深圳灣口岸",
+      text: "城巴 B3A 實時到站看板",
+      url: location.href
+    };
+    if (navigator.share) {
+      try { await navigator.share(data); return; }
+      catch (e) { if (e && e.name === "AbortError") return; }
+    }
+    try {
+      await navigator.clipboard.writeText(location.href);
+      toast("連結已複製");
+    } catch (e) {
+      toast("請手動複製網址");
+    }
+  }
+
+  document.querySelectorAll(".stop-picker").forEach(function (btn) {
+    btn.addEventListener("click", function () { openDialog(btn.dataset.dir); });
+  });
+
+  ui.stopList.addEventListener("click", function (e) {
+    const item = e.target.closest(".stop-item");
+    if (item) selectStop(dialogDir, item.dataset.stop);
+  });
+
+  ui.dialogClose.addEventListener("click", function () { ui.dialog.close(); });
+  ui.dialog.addEventListener("click", function (e) {
+    if (e.target === ui.dialog) ui.dialog.close();
+  });
+
+  ui.refreshBtn.addEventListener("click", function () { refreshAll(true); });
+  ui.shareBtn.addEventListener("click", sharePage);
+
+  document.addEventListener("visibilitychange", function () {
+    if (!document.hidden) refreshAll(false);
+  });
+
+  tickClock();
+  setInterval(tickClock, 1000);
+  setInterval(function () { if (!document.hidden) refreshAll(false); }, REFRESH_MS);
+  setInterval(function () {
+    renderService("O");
+    renderService("I");
+  }, 15000);
+
+  renderService("O");
+  renderService("I");
+  refreshAll(false);
+})();
+</script>
+</body>
+</html>
