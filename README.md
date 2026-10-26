@@ -12,24 +12,18 @@
 - 顯示下一班、第 2 班、第 3 班的預計到站時間
 - 每 30 秒自動更新，亦可手動更新
 - 手機優先的深色／櫻花介面，分享按鈕、無追蹤
+- 人物圖片暫時移除，現以兔耳 B3A、櫻花配色與每日寄語呈現
 
-## 資料來源
+## 資料來源與連線
 
 - 城巴開放數據（DATA.GOV.HK）：`https://rt.data.gov.hk/v2/transport/citybus/`
 - 使用 `route-stop` 與 `eta` 端點；到站時間為預計，僅供參考。
+- 若主網域被代理／VPN 攔截，頁面會自動改用同一 API 的 CloudFront 端點（`d3amutxzdzfxs.cloudfront.net`）。
 - 本專案與城巴、DATA.GOV.HK 無官方關係。
-
-## 圖片與版權
-
-- 首頁角色圖選用《青春ブタ野郎》電視動畫官方網站（ao-buta.com）的櫻島麻衣主視覺，經裁切及調色後使用。
-- 角色圖片版權歸原作者／製作委員會所有；本專案為非商業、非官方粉絲作品。
-- 如版權持有人要求，會立即移除相關圖片。
 
 ## 技術
 
 - `index.html`：單頁，內嵌 CSS/JavaScript，不需要 build step
-- `mai-hero.jpg`：首頁主視覺
-- `og.jpg`：分享預覽圖
 - `favicon.svg`：兔耳 B3A 圖示
 
 直接由 GitHub Pages 提供。

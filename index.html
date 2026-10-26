@@ -11,13 +11,7 @@
 <meta property="og:description" content="城巴 B3A 實時到站看板，桜島麻衣主題；預設富泰（近嶺南大學），30 秒自動更新。">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://wgawga041815-create.github.io/b3a-bus/">
-<meta property="og:image" content="https://wgawga041815-create.github.io/b3a-bus/og.jpg">
-<meta property="og:image:width" content="1200">
-<meta property="og:image:height" content="630">
-<meta property="og:image:type" content="image/jpeg">
-<meta property="og:image:alt" content="B3A 實時到站看板，桜島麻衣主題">
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://wgawga041815-create.github.io/b3a-bus/og.jpg">
+<meta name="twitter:card" content="summary">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <style>
   :root {
@@ -725,87 +719,47 @@
     background: rgba(243, 184, 200, .055);
   }
 
-  /* ── Mai hero ───────────────────────────────── */
-  .hero {
-    position: relative;
-    margin: 13px 0 0;
-    overflow: hidden;
-    border: 1px solid rgba(243, 184, 200, .2);
-    border-radius: 20px;
-    aspect-ratio: 16 / 9.2;
-    background: #1a1020;
-    box-shadow: 0 18px 46px rgba(0, 0, 0, .38), inset 0 1px 0 rgba(255, 255, 255, .05);
-  }
-  .hero img {
-    display: block;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    object-position: 50% 38%;
-    filter: saturate(1.04) contrast(1.01);
-  }
-  .hero::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    pointer-events: none;
-    background:
-      linear-gradient(180deg, rgba(11, 8, 16, .02) 0%, rgba(11, 8, 16, .04) 42%, rgba(11, 8, 16, .78) 100%),
-      linear-gradient(90deg, rgba(11, 8, 16, .42) 0%, rgba(11, 8, 16, 0) 58%);
-  }
-  .name-tag {
-    position: absolute;
-    top: 11px;
-    right: 11px;
-    z-index: 2;
-    writing-mode: vertical-rl;
-    padding: 8px 5px;
-    border: 1px solid rgba(143, 45, 67, .28);
-    border-radius: 8px;
-    background: rgba(255, 250, 252, .93);
-    color: #8f2d43;
-    font-family: "Yu Mincho", "Hiragino Mincho ProN", "Noto Serif TC", "Songti TC", serif;
-    font-size: 12px;
-    font-weight: 600;
-    letter-spacing: .18em;
-    box-shadow: 0 5px 18px rgba(0, 0, 0, .22);
-  }
-  .hero-caption {
-    position: absolute;
-    left: 13px;
-    right: 13px;
-    bottom: 11px;
-    z-index: 2;
+  /* ── Mai note ───────────────────────────────── */
+  .mai-note {
     display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 6px;
-  }
-  .hero-badge {
-    display: inline-flex;
     align-items: center;
-    gap: 5px;
-    padding: 4px 8px;
-    border: 1px solid rgba(255, 255, 255, .2);
-    border-radius: 999px;
-    background: rgba(11, 8, 16, .46);
-    color: #ffe1e9;
-    font-size: 9px;
-    font-weight: 600;
-    letter-spacing: .14em;
-    backdrop-filter: blur(6px);
-    -webkit-backdrop-filter: blur(6px);
+    gap: 12px;
+    margin: 13px 0 0;
+    padding: 12px 14px;
+    border: 1px solid rgba(243, 184, 200, .2);
+    border-radius: 16px;
+    background:
+      radial-gradient(120% 160% at 100% 0%, rgba(255, 159, 186, .12), transparent 58%),
+      linear-gradient(135deg, #2b1931 0%, #170f20 60%, #0f0a15 100%);
+    box-shadow: 0 14px 34px rgba(0, 0, 0, .26), inset 0 1px 0 rgba(255, 255, 255, .04);
   }
-  .hero-badge svg { width: 12px; height: 12px; flex: none; color: var(--pink); }
+  .mai-avatar {
+    flex: none;
+    width: 44px;
+    height: 44px;
+    display: grid;
+    place-items: center;
+    border: 1px solid rgba(243, 184, 200, .22);
+    border-radius: 50%;
+    background: rgba(243, 184, 200, .08);
+    color: var(--pink);
+  }
+  .mai-avatar svg { width: 25px; height: 25px; }
+  .mai-copy { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+  .mai-name {
+    font-family: "Yu Mincho", "Hiragino Mincho ProN", "Noto Serif TC", "Songti TC", serif;
+    font-size: 10.5px;
+    font-weight: 600;
+    letter-spacing: .16em;
+    color: var(--pink);
+  }
   .quote {
     margin: 0;
-    max-width: 88%;
-    color: #fff0f4;
+    color: #ffeaf0;
     font-family: "Yu Mincho", "Hiragino Mincho ProN", "Noto Serif TC", "Songti TC", serif;
     font-size: 11.5px;
-    line-height: 1.65;
-    letter-spacing: .03em;
-    text-shadow: 0 1px 10px rgba(0, 0, 0, .72);
+    line-height: 1.55;
+    letter-spacing: .02em;
   }
 
   /* ── Panels in plum / sakura ────────────────── */
@@ -883,10 +837,10 @@
     .route-badge { width: 54px; height: 54px; font-size: 19px; border-radius: 15px; }
     .route-badge::before { left: 7px; }
     .route-badge::after { left: 19px; }
-    .hero { border-radius: 17px; aspect-ratio: 16 / 9.2; }
-    .name-tag { top: 9px; right: 9px; font-size: 11px; padding: 7px 4px; }
-    .hero-caption { left: 11px; right: 11px; bottom: 9px; }
-    .quote { font-size: 10.8px; max-width: 92%; }
+    .mai-note { padding: 11px 12px; border-radius: 15px; gap: 10px; }
+    .mai-avatar { width: 40px; height: 40px; }
+    .mai-avatar svg { width: 22px; height: 22px; }
+    .quote { font-size: 10.8px; }
     .head-copy h1 { font-size: 17.5px; }
     .clockbox b { font-size: 13px; }
     .service { padding: 13px; border-radius: 19px; }
@@ -928,17 +882,21 @@
     </div>
   </header>
 
-  <figure class="hero">
-    <img src="mai-hero.jpg" alt="桜島麻衣站在水族館的水母缸前" width="1600" height="920" fetchpriority="high">
-    <span class="name-tag">桜島麻衣</span>
-    <figcaption class="hero-caption">
-      <span class="hero-badge">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8.2 9.4C6.6 7 6.1 4.2 7 3.5c.9-.6 2.2 1.4 3 3.6"/><path d="M15.8 9.4c1.6-2.4 2.1-5.2 1.2-5.9-.9-.6-2.2 1.4-3 3.6"/><path d="M12 21c-3.5 0-5.8-2.3-5.8-5.2C6.2 12.1 8.7 9 12 9s5.8 3.1 5.8 6.8C17.8 18.7 15.5 21 12 21Z"/><circle cx="9.9" cy="14.2" r=".7" fill="currentColor" stroke="none"/><circle cx="14.1" cy="14.2" r=".7" fill="currentColor" stroke="none"/></svg>
-        B3A 實時到站
-      </span>
+  <aside class="mai-note" aria-label="桜島麻衣每日寄語">
+    <span class="mai-avatar" aria-hidden="true">
+      <svg viewBox="0 0 200 220" fill="none" stroke="currentColor" stroke-width="7" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M72 96C58 62 56 28 66 20c10-8 22 26 28 58"/>
+        <path d="M128 96c14-34 16-68 6-76-10-8-22 26-28 58"/>
+        <path d="M100 206c-37 0-58-26-58-60 0-34 26-58 58-58s58 24 58 58c0 34-21 60-58 60Z"/>
+        <path d="M84 146c2-2 5-2 7 0M109 146c2-2 5-2 7 0"/>
+        <path d="M94 166c4 3 8 3 12 0"/>
+      </svg>
+    </span>
+    <div class="mai-copy">
+      <span class="mai-name">桜島麻衣</span>
       <p class="quote" id="maiQuote">「車來了。走吧，別讓我等。」</p>
-    </figcaption>
-  </figure>
+    </div>
+  </aside>
 
   <section class="service" data-dir="O" aria-labelledby="dirO">
     <div class="service-top">
@@ -1008,7 +966,7 @@
       </button>
     </div>
   </footer>
-  <p class="source">資料來源：城巴開放數據（DATA.GOV.HK）· 到站時間為預計<br>非官方粉絲作品 · 角色圖片版權歸原作者所有</p>
+  <p class="source">資料來源：城巴開放數據（DATA.GOV.HK）· 到站時間為預計<br>非官方粉絲作品 · 櫻島麻衣角色版權歸原作者</p>
 </main>
 
 <dialog id="stopDialog" aria-labelledby="dialogTitle">
@@ -1028,7 +986,13 @@
 (function () {
   "use strict";
 
-  const API = "https://rt.data.gov.hk/v2/transport/citybus";
+  // Some proxies/VPNs close connections to rt.data.gov.hk; the second host is
+  // the same Citybus API behind its CloudFront distribution.
+  const API_HOSTS = [
+    "https://rt.data.gov.hk/v2/transport/citybus",
+    "https://d3amutxzdzfxs.cloudfront.net/v2/transport/citybus"
+  ];
+  let apiBase = API_HOSTS[0];
   const CO = "CTB";
   const ROUTE = "B3A";
   const REFRESH_MS = 30000;
@@ -1247,6 +1211,30 @@
     }
   }
 
+  async function fetchEta(stop) {
+    let lastErr = null;
+    const bases = [apiBase].concat(API_HOSTS.filter(function (b) { return b !== apiBase; }));
+    for (let i = 0; i < bases.length; i++) {
+      const controller = new AbortController();
+      const timer = setTimeout(function () { controller.abort(); }, 4500);
+      try {
+        const res = await fetch(bases[i] + "/eta/" + CO + "/" + stop + "/" + ROUTE, {
+          cache: "no-store",
+          signal: controller.signal
+        });
+        if (!res.ok) throw new Error("HTTP " + res.status);
+        const json = await res.json();
+        apiBase = bases[i];
+        return json;
+      } catch (err) {
+        lastErr = err;
+      } finally {
+        clearTimeout(timer);
+      }
+    }
+    throw lastErr || new Error("網絡錯誤");
+  }
+
   async function fetchService(dir) {
     const s = state[dir];
     const reqId = (s.reqId || 0) + 1;
@@ -1256,9 +1244,7 @@
     renderService(dir);
 
     try {
-      const res = await fetch(API + "/eta/" + CO + "/" + s.stop + "/" + ROUTE, { cache: "no-store" });
-      if (!res.ok) throw new Error("HTTP " + res.status);
-      const payload = await res.json();
+      const payload = await fetchEta(s.stop);
       if (reqId !== s.reqId) return;
       const now = Date.now();
       const rows = (Array.isArray(payload.data) ? payload.data : [])
